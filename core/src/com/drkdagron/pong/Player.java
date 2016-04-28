@@ -26,4 +26,16 @@ public class Player extends GameObj{
     {
         sb.draw(texture, position.x - origin.x, position.y - origin.y);
     }
+
+    public void Update(float elapsedTime)
+    {
+        if (position.x - origin.x < -240)
+        {
+            position = new Vector2(-240 + origin.x, position.y);
+        }
+        if (position.x + origin.x > 240)
+        {
+            position = new Vector2(240 - origin.x, position.y);
+        }
+    }
 }

@@ -14,6 +14,7 @@ public class Pong extends ApplicationAdapter {
 
 	OrthographicCamera gameCam;
 	Player[] players;
+	Ball ball;
 
 	@Override
 	public void create () {
@@ -23,9 +24,10 @@ public class Pong extends ApplicationAdapter {
 		gameCam = new OrthographicCamera(480, 800);
 		players = new Player[2];
 		players[0] = new Player("pblue.png", new Vector2(480, 800));
-		players[0].setPosition(new Vector2(0, 370));
+		players[0].setPosition(new Vector2(0, 360));
 		players[1] = new Player("pred.png", new Vector2(480, 800));
-		players[1].setPosition(new Vector2(0, -370));
+		players[1].setPosition(new Vector2(0, -360));
+		ball = new Ball("ball.png", new Vector2(0,0));
 	}
 
 	@Override
@@ -40,12 +42,15 @@ public class Pong extends ApplicationAdapter {
 		for (int i= 0; i < players.length; i++)
 		{
 			players[i].Draw(batch);
+			Gdx.app.error("PLAYER:"+ i, players[i].getPosition().toString());
 		}
+		ball.Draw(batch);
 		batch.end();
 	}
 
 	public void Update(float elapsedTime)
 	{
+
 		Vector2 t0 = getTouch(0);
 		Vector2 t1 = getTouch(1);
 		if (Gdx.input.isTouched())
@@ -54,11 +59,11 @@ public class Pong extends ApplicationAdapter {
 			{
 				if (t0.y < 400)
 				{
-					players[0].setPosition(new Vector2(t0.x - 200, players[0].getPosition().y));
+					players[0].setPosition(new Vector2(t0.x - 240, players[0].getPosition().y));
 				}
 				else if (t0.y > 400)
 				{
-					players[1].setPosition(new Vector2(t0.x - 200, players[1].getPosition().y));
+					players[1].setPosition(new Vector2(t0.x - 240, players[1].getPosition().y));
 				}
 			}
 			if (Gdx.input.isTouched(1))
@@ -73,6 +78,11 @@ public class Pong extends ApplicationAdapter {
 				}
 			}
 		}
+		for (int i = 0; i < players.length; i++)
+		{
+			players[i].Update(elapsedTime);
+		}
+		ball.Update(elapsedTime);
 	}
 
 	public Vector2 getTouch(int id)
@@ -83,7 +93,7 @@ public class Pong extends ApplicationAdapter {
 		if (Gdx.input.isTouched(id)) {
 			start = new Vector2(Gdx.input.getX(id), Gdx.input.getY(id));
 			scale = new Vector2((start.x / viewport.x) * 480, (start.y / viewport.y) * 800);
-			Gdx.app.error("CAM", scale.toString());
+			//Gdx.app.error("CAM", scale.toString());
 		}
 		return scale;
 	}
