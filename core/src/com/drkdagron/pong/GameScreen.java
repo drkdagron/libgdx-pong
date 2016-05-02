@@ -51,8 +51,8 @@ public class GameScreen extends BaseScreen {
 
         scoreBall = new Texture(Gdx.files.internal("oriBallScore.png"));
 
-        font = new UIText("kenvector.ttf", "Touch screen to start", 24, new Vector2(0, -200));
-        instuct = new UIText("kenvector.ttf", "Touch above line\nSingle Player\n\n\nTouch below line\nMulti Player", 24, new Vector2(0, 150));
+        //font = new UIText("kenvector.ttf", "Touch screen to start", 24, new Vector2(0, -200));
+        instuct = new UIText("kenvector.ttf", "Touch above line for\nSingle Player\n\n\n\n\nTouch below line for\nMulti Player", 24, new Vector2(0, 210));
 
         ball = new Ball("oriBall.png", new Vector2(0,0));
     }
@@ -75,12 +75,16 @@ public class GameScreen extends BaseScreen {
                     sb.draw(scoreBall, (-220 + (scoreBall.getWidth() * j)) - (scoreBall.getWidth() / 2), -35 - (scoreBall.getHeight() / 2));
             }
         }
-        ball.Draw(sb);
+
 
         if (active == false)
         {
-            font.Draw(sb);
+            //font.Draw(sb);
             instuct.Draw(sb);
+        }
+        else
+        {
+            ball.Draw(sb);
         }
 
         sb.end();
