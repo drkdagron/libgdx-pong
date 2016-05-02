@@ -9,9 +9,12 @@ import com.drkdagron.engine.GameObj;
  * Created by drkdagron on 2016-04-26.
  */
 public class Player extends GameObj{
+    public int Score = 0;
+
     public Player(String file, Vector2 bounds) {
         super(file);
         this.bounds = bounds;
+        Score = 0;
     }
 
     public boolean isTop()
@@ -20,11 +23,6 @@ public class Player extends GameObj{
             return true;
 
         return false;
-    }
-
-    public void Draw(SpriteBatch sb)
-    {
-        sb.draw(texture, position.x - origin.x, position.y - origin.y);
     }
 
     public void Update(float elapsedTime)

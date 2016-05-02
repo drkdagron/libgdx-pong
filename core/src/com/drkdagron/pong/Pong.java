@@ -4,30 +4,34 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.drkdagron.engine.GameObj;
+import com.drkdagron.engine.UIText;
+import com.drkdagron.engine.screens.ScreenManager;
+
+import javafx.scene.paint.Color;
 
 public class Pong extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
 
-	OrthographicCamera gameCam;
-	Player[] players;
-	Ball ball;
+    ScreenManager screen;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
 
-		gameCam = new OrthographicCamera(480, 800);
-		players = new Player[2];
-		players[0] = new Player("pblue.png", new Vector2(480, 800));
-		players[0].setPosition(new Vector2(0, 360));
-		players[1] = new Player("pred.png", new Vector2(480, 800));
-		players[1].setPosition(new Vector2(0, -360));
-		ball = new Ball("ball.png", new Vector2(0,0));
+        screen = new ScreenManager();
+        screen.addScreen(new GameScreen(screen));
+        screen.setScreen("Game");
 	}
 
 	@Override
@@ -35,67 +39,8 @@ public class Pong extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		Update(Gdx.graphics.getDeltaTime());
-
-		batch.setProjectionMatrix(gameCam.combined);
-		batch.begin();
-		for (int i= 0; i < players.length; i++)
-		{
-			players[i].Draw(batch);
-			Gdx.app.error("PLAYER:"+ i, players[i].getPosition().toString());
-		}
-		ball.Draw(batch);
-		batch.end();
+        float elapsed = Gdx.graphics.getDeltaTime();
+        screen.Update(elapsed);
+        screen.Draw(batch);
 	}
-
-	public void Update(float elapsedTime)
-	{
-
-		Vector2 t0 = getTouch(0);
-		Vector2 t1 = getTouch(1);
-		if (Gdx.input.isTouched())
-		{
-			if (Gdx.input.isTouched(0))
-			{
-				if (t0.y < 400)
-				{
-					players[0].setPosition(new Vector2(t0.x - 240, players[0].getPosition().y));
-				}
-				else if (t0.y > 400)
-				{
-					players[1].setPosition(new Vector2(t0.x - 240, players[1].getPosition().y));
-				}
-			}
-			if (Gdx.input.isTouched(1))
-			{
-				if (t1.y < 400)
-				{
-					players[0].setPosition(new Vector2(t1.x - 200, players[0].getPosition().y));
-				}
-				else if (t1.y > 400)
-				{
-					players[1].setPosition(new Vector2(t1.x - 200, players[1].getPosition().y));
-				}
-			}
-		}
-		for (int i = 0; i < players.length; i++)
-		{
-			players[i].Update(elapsedTime);
-		}
-		ball.Update(elapsedTime);
-	}
-
-	public Vector2 getTouch(int id)
-	{
-		Vector2 start = new Vector2(0,0);
-		Vector2 viewport = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		Vector2 scale = new Vector2(0,0);
-		if (Gdx.input.isTouched(id)) {
-			start = new Vector2(Gdx.input.getX(id), Gdx.input.getY(id));
-			scale = new Vector2((start.x / viewport.x) * 480, (start.y / viewport.y) * 800);
-			//Gdx.app.error("CAM", scale.toString());
-		}
-		return scale;
-	}
-
 }
